@@ -1,0 +1,137 @@
+Develop a Flutter-based Smart Study Planner & Exam Preparation Tracker App that helps students plan 
+subjects, schedule study sessions, track syllabus completion, and analyze preparation progress with offline-
+first functionality and synchronized updates. 
+Students preparing for exams often face difficulties such as: 
+• 
+Poor time management and unstructured study plans 
+• 
+Difficulty tracking syllabus completion 
+• 
+Lack of visibility into preparation progress 
+• 
+Overlooking important subjects or topics 
+• 
+Dependency on internet-based tools 
+To address these challenges, a mobile application is required that enables students to plan study schedules, 
+track completion status, and analyze preparation progress effectively, even in offline scenarios. 
+Design and implement a mobile application that: 
+• 
+Allows students to plan study schedules 
+• 
+Tracks subject-wise and topic-wise progress 
+• 
+Provides insights into preparation status 
+• 
+Helps in prioritizing subjects based on completion 
+• 
+Supports offline usage with later synchronization 
+Functional Requirements 
+1. Subject & Topic Management Module 
+• 
+Add subjects with: 
+o Subject Name 
+• 
+Add topics under each subject: 
+o Topic Name 
+o Estimated study time 
+2. Study Scheduling Module 
+• 
+Schedule study sessions with: 
+o Subject 
+o Topic 
+o Date & Time 
+o Duration 
+3. Progress Tracking Module 
+• 
+Mark topics as: 
+o Not Started 
+o In Progress 
+o Completed 
+• 
+Track percentage completion per subject 
+4. Study Dashboard 
+• 
+Display: 
+o Total subjects 
+o Completed topics 
+o Pending topics 
+o Daily study progress 
+• 
+Visual indicators (progress bars/charts) 
+5. Priority & Planning Logic 
+• 
+Highlight: 
+o Subjects with lowest completion 
+• 
+Suggest next topics to study (basic logic) 
+6. Search & Filter Module 
+• 
+Search topics by name 
+• 
+Filter by: 
+o Subject 
+o Status (Completed / Pending) 
+o Date 
+7. Offline Functionality 
+• 
+Allow scheduling and tracking without internet 
+• 
+Store data locally 
+• 
+Sync updates when online 
+8. Validation & Error Handling 
+• 
+Prevent invalid schedules (past dates optional check) 
+• 
+Validate required fields 
+• 
+Provide meaningful alerts 
+Technical Requirements 
+• 
+Framework: Flutter 
+• 
+State Management: Provider / Riverpod / Bloc 
+• 
+Local Storage: Hive / SQLite 
+• 
+Optional Backend: Firebase / REST API 
+• 
+Modular architecture (Subject, Schedule, Progress modules) 
+• 
+Clean and maintainable code 
+UI/UX Requirements 
+Design a minimum of five screens: 
+1. Subject & Topic Management Screen 
+2. Study Scheduling Screen 
+3. Study Progress Screen 
+4. Dashboard Screen 
+5. Search & Filter Screen 
+• 
+Use visual progress indicators 
+• 
+Ensure easy navigation between planning and tracking 
+• 
+Maintain clean and structured layout 
+GitHub Requirement 
+• 
+Maintain a public GitHub repository 
+• 
+Minimum 4 commits: 
+1. Project Initialization 
+2. UI Implementation 
+3. Core Logic (Scheduling + Progress Tracking) 
+4. Offline Storage & Final Enhancements 
+Submission Requirements 
+PDF Name: StudentID_StudyPlannerApp.pdf 
+Must Include: 
+• 
+Screenshots of all UI screens 
+• 
+Description of implemented modules 
+• 
+Explanation of progress tracking and priority logic 
+• 
+Future Scope 
+• 
+Conclusion 
+ 
