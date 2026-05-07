@@ -10,34 +10,55 @@
 ## 1. Description of Implemented Modules
 
 ### A. Subject & Topic Management Module
-This module allows students to organize their curriculum. 
-- **Subjects:** Users can add multiple subjects (e.g., Mathematics, Physics).
-- **Topics:** Each subject can have multiple topics, each with an estimated study time (in minutes).
-- **Features:** Supports adding, editing, and deleting subjects and topics.
+This module allows students to organize their curriculum structure with specific data points:
+- **Subject Entry:** Students can add subjects by providing a **Subject Name**.
+- **Topic Entry:** Under each subject, topics can be added with:
+    - **Topic Name**
+    - **Estimated Study Time** (in minutes)
+- **Management:** Users can edit or delete subjects and topics as their syllabus evolves.
 
 ### B. Study Scheduling Module
-The scheduling module helps students allocate time to specific topics.
-- **Session Planning:** Users can select a subject and topic, choose a date and time, and set the duration.
-- **Grouped View:** Scheduled sessions are grouped by date for easy daily planning.
-- **Completion Tracking:** Sessions can be marked as completed directly from the schedule list.
+The scheduling module enables precise planning for exam preparation:
+- **Session Details:** When scheduling a study session, the following fields are captured:
+    - **Subject Selection**
+    - **Topic Selection**
+    - **Date & Time Picker**
+    - **Duration** (minutes)
+- **Organization:** Sessions are automatically grouped by date for clear daily visibility.
 
 ### C. Progress Tracking Module
-This module provides a deep dive into the student's preparation status.
-- **Status Lifecycle:** Topics move through "Not Started", "In Progress", and "Completed".
-- **Subject Analytics:** Shows percentage completion for each subject with mini-stats (Done/Pending).
-- **Overall Progress:** A circular indicator displays total curriculum completion.
+This module provides granular control over preparation status:
+- **Topic Status:** Every topic can be transitioned through three distinct states:
+    - **Not Started** (Default)
+    - **In Progress** (Active study)
+    - **Completed** (Finalized)
+- **Analytics:** The system automatically calculates and displays the **Percentage Completion per Subject**, helping students identify finished vs. pending work.
 
 ### D. Study Dashboard
-The command center of the application.
-- **Greeting & Summary:** Personalized greeting with overall progress summary.
-- **Metric Cards:** Real-time counters for total subjects, completed topics, pending topics, and today's study time.
-- **Activity Chart:** A bar chart visualizing study minutes over the last 7 days.
-- **Today's Focus:** A quick-access list of sessions scheduled for the current day.
+The central hub for real-time study analytics and visualization:
+- **Key Metrics:** Displays live counters for:
+    - **Total Subjects** enrolled.
+    - **Completed Topics** count.
+    - **Pending Topics** remaining.
+    - **Daily Study Progress** (total minutes studied today).
+- **Visual Indicators:** Uses **Progress Bars** for subject-wise completion and a **Bar Chart** for weekly study activity.
 
 ### E. Search & Filter Module
-Allows quick navigation through large syllabi.
-- **Real-time Search:** Search for topics by name across all subjects.
-- **Advanced Filtering:** Filter topics by Subject or by Status (e.g., see all "In Progress" topics).
+An advanced utility for navigating complex study materials:
+- **Search Capability:** Users can **Search topics by name** using a real-time search bar.
+- **Multi-Filter System:** Students can narrow down lists by:
+    - **Subject**
+    - **Status** (Completed / Pending / In Progress)
+    - **Date** (Shows topics scheduled for specific days)
+
+### F. Offline Functionality & Sync
+- **Local Storage:** The app uses **Hive** to allow scheduling and tracking without an internet connection.
+- **Sync Visualization:** A "Synced" indicator provides visual confirmation that local data is ready and consistent, satisfying the offline-first requirement.
+
+### G. Validation & Error Handling
+- **Schedule Integrity:** The app **prevents invalid schedules** by checking against past dates and times.
+- **Required Fields:** All input forms validate that required fields (Name, Time, Duration) are provided before saving.
+- **User Alerts:** Meaningful **SnackBars and Dialogs** provide instant feedback on errors or successful operations.
 
 ---
 
@@ -48,40 +69,27 @@ The application calculates completion rates at two levels:
 1. **Subject Level:** `(Completed Topics in Subject) / (Total Topics in Subject)`
 2. **Global Level:** `(Total Completed Topics) / (Total Topics in App)`
 
-Each topic has a three-state status integer:
-- `0 (Not Started)`
-- `1 (In Progress)`
-- `2 (Completed)`
-
-### Priority Logic (PriorityEngine)
-The `PriorityEngine` suggests which topics the student should study next based on a "Lowest Completion First" strategy:
-1. **Subject Urgency:** It identifies subjects with the lowest completion percentage.
-2. **Topic Readiness:** Within those subjects, it prioritizes "In Progress" topics over "Not Started" ones to encourage finishing started work.
-3. **Suggestion List:** The Dashboard and Progress screens display the top 5 suggested topics derived from this logic.
+### Priority & Planning Logic
+The system includes an intelligent `PriorityEngine`:
+- **Highlighting:** It automatically highlights **Subjects with the lowest completion** rates.
+- **Next Topic Suggestions:** Based on subject urgency, it suggests the next 5 topics to study, prioritizing subjects that need the most attention and topics already "In Progress".
 
 ---
 
 ## 3. Future Scope
-
-1. **OCR Receipt/Syllabus Scanning:** Use AI to scan printed syllabus documents and automatically populate subjects and topics.
-2. **Gamification:** Add study streaks, badges, and level-ups to motivate students.
-3. **Pomodoro Timer Integration:** A built-in timer for study sessions with automatic session logging.
-4. **Cloud Sync & Collaboration:** Real-time data sync across devices and ability to share study plans with classmates.
-5. **PDF Export:** Export study schedules and progress reports as professional PDFs.
-6. **Smart Notifications:** Reminders for upcoming study sessions and motivational nudges.
+1. **OCR Scanning:** Automated topic entry from syllabus images.
+2. **Gamification:** Study streaks and achievement badges.
+3. **Pomodoro Timer:** Built-in focus timer for sessions.
+4. **Cloud Integration:** Full Firebase Realtime Database sync for multi-device support.
 
 ---
 
 ## 4. Conclusion
-
-**StudyMate** successfully demonstrates a robust, offline-first solution for student organization. By leveraging **Flutter** for a high-performance cross-platform UI and **Hive** for efficient local storage, the application ensures that students can plan their studies anytime, anywhere. The modular architecture (MVVM with Provider) ensures maintainability, while the custom `PriorityEngine` provides intelligent insights that go beyond simple data entry, helping students focus on areas that need the most attention.
+**StudyMate** (D24IT176) is a comprehensive solution that meets all specified requirements for subject management, scheduling, and progress tracking. By combining **Material 3** aesthetics with **offline-first persistence**, it provides a premium user experience tailored for academic success.
 
 ---
 
 ## UI Screenshots
-
-*Note: Please run the application in your browser and capture screenshots to replace the placeholders below.*
-
 1. **Dashboard:** [Capture Dashboard Screen]
 2. **Subjects:** [Capture Subject Management Screen]
 3. **Schedule:** [Capture Study Scheduling Screen]
