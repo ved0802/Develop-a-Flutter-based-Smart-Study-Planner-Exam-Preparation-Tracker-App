@@ -60,43 +60,91 @@ class DashboardScreen extends StatelessWidget {
               const SizedBox(height: 24),
 
               // Today's sessions
-              Text("📅 Today's Sessions", style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8),
               _buildTodaySessions(context, schedProv, subjProv, colorScheme),
               const SizedBox(height: 24),
 
-              // Subject completion bars
-              Text('📚 Subject Overview', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              // Priority Suggestions
+              Text('🔥 Suggested Next Topics', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(height: 8),
-              ...subjProv.subjects.map((s) {
+              _buildSuggestedTopics(context, subjProv, colorScheme),
+              const SizedBox(height: 24),
+
+              // Subject completion bars
+              Text('📚 Subject Overview (Priority First)', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              ...((subjProv.subjects.toList()..sort((a, b) => subjProv.subjectCompletion(a.id).compareTo(subjProv.subjectCompletion(b.id)))).map((s) {
                 final comp = subjProv.subjectCompletion(s.id);
                 final topics = subjProv.topicsForSubject(s.id);
+                final isLowProgress = comp < 0.3 && topics.isNotEmpty;
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(width: 100, child: Text(s.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: comp, minHeight: 10,
-                            backgroundColor: colorScheme.surfaceContainerHighest,
-                            valueColor: AlwaysStoppedAnimation(comp == 1.0 ? AppTheme.completedColor : colorScheme.primary),
-                          ),
-                        ),
+                      Row(
+                        children: [
+                          Expanded(child: Text(s.name, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500), overflow: TextOverflow.ellipsis)),
+                          if (isLowProgress)
+                            Container(
+                              margin: const EdgeInsets.only(left: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(color: colorScheme.errorContainer, borderRadius: BorderRadius.circular(4)),
+                              child: Text('Needs Attention', style: TextStyle(fontSize: 9, color: colorScheme.error, fontWeight: FontWeight.bold)),
+                            ),
+                          const SizedBox(width: 12),
+                          Text('${(comp * 100).toInt()}%', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: comp == 1.0 ? AppTheme.completedColor : colorScheme.primary)),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text('${topics.where((t) => t.isCompleted).length}/${topics.length}', style: TextStyle(fontSize: 12, color: colorScheme.onSurfaceVariant, fontWeight: FontWeight.w500)),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: comp, minHeight: 8,
+                                backgroundColor: colorScheme.surfaceContainerHighest,
+                                valueColor: AlwaysStoppedAnimation(comp == 1.0 ? AppTheme.completedColor : (isLowProgress ? colorScheme.error : colorScheme.primary)),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text('${topics.where((t) => t.isCompleted).length}/${topics.length}', style: TextStyle(fontSize: 11, color: colorScheme.onSurfaceVariant)),
+                        ],
+                      ),
                     ],
                   ),
                 );
-              }),
+              })),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildSuggestedTopics(BuildContext context, SubjectProvider provider, ColorScheme colorScheme) {
+    final suggested = provider.suggestedTopics.take(3).toList();
+    if (suggested.isEmpty) {
+      return const Card(child: Padding(padding: EdgeInsets.all(16), child: Text('No suggestions - all topics completed!', textAlign: TextAlign.center)));
+    }
+    return Column(
+      children: suggested.map((topic) {
+        final subjectName = provider.subjectName(topic.subjectId);
+        return Card(
+          margin: const EdgeInsets.only(bottom: 8),
+          child: ListTile(
+            dense: true,
+            leading: Icon(Icons.lightbulb, color: AppTheme.statusColor(topic.status), size: 20),
+            title: Text(topic.name, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+            subtitle: Text('$subjectName • ${topic.estimatedMinutes} min', style: const TextStyle(fontSize: 11)),
+            trailing: IconButton(
+              icon: Icon(Icons.play_circle_outline, color: colorScheme.primary),
+              onPressed: () => provider.updateTopicStatus(topic, 1), // Start session
+            ),
+          ),
+        );
+      }).toList(),
     );
   }
 

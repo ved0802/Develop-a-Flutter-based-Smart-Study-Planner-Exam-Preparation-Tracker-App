@@ -8,7 +8,8 @@ class DataInitializer {
     final subjProv = context.read<SubjectProvider>();
     final schedProv = context.read<ScheduleProvider>();
 
-    if (subjProv.subjects.isNotEmpty) return;
+    final subjects = subjProv.subjects;
+    if (subjects.any((s) => s.name == 'Mathematics')) return;
 
     // Add Mathematics
     await subjProv.addSubject('Mathematics');
