@@ -13,6 +13,7 @@ import 'package:study_planner/modules/subject/screens/subject_management_screen.
 import 'package:study_planner/modules/schedule/screens/study_scheduling_screen.dart';
 import 'package:study_planner/modules/progress/screens/study_progress_screen.dart';
 import 'package:study_planner/modules/search/screens/search_filter_screen.dart';
+import 'package:study_planner/core/utils/data_initializer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,10 +48,29 @@ class StudyPlannerApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.system,
-        home: const HomeShell(),
+        home: const AppLoader(),
       ),
     );
   }
+}
+
+class AppLoader extends StatefulWidget {
+  const AppLoader({super.key});
+  @override
+  State<AppLoader> createState() => _AppLoaderState();
+}
+
+class _AppLoaderState extends State<AppLoader> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      DataInitializer.initialize(context);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const HomeShell();
 }
 
 class HomeShell extends StatefulWidget {

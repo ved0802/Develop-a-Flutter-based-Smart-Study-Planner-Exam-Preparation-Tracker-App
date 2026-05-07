@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:study_planner/core/theme.dart';
 
+import 'package:intl/intl.dart';
 import 'package:study_planner/modules/subject/models/topic.dart';
 import 'package:study_planner/modules/subject/providers/subject_provider.dart';
+import 'package:study_planner/modules/schedule/providers/schedule_provider.dart';
 
 class SearchFilterScreen extends StatefulWidget {
   const SearchFilterScreen({super.key});
@@ -14,7 +16,8 @@ class SearchFilterScreen extends StatefulWidget {
 class _SearchFilterScreenState extends State<SearchFilterScreen> {
   final _searchCtrl = TextEditingController();
   String? _filterSubjectId;
-  int? _filterStatus; // null = all, 0/1/2
+  int? _filterStatus;
+  DateTime? _filterDate;
   List<Topic> _results = [];
   bool _hasSearched = false;
 
@@ -40,6 +43,13 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
     }
     if (_filterStatus != null) {
       results = results.where((t) => t.status == _filterStatus).toList();
+    }
+
+    if (_filterDate != null) {
+      final schedProv = context.read<ScheduleProvider>();
+      final sessionsOnDate = schedProv.sessionsForDate(_filterDate!);
+      final topicIdsOnDate = sessionsOnDate.map((s) => s.topicId).toSet();
+      results = results.where((t) => topicIdsOnDate.contains(t.id)).toList();
     }
 
     setState(() {
@@ -123,6 +133,39 @@ class _SearchFilterScreenState extends State<SearchFilterScreen> {
                         color: AppTheme.completedColor,
                         onSelected: () { setState(() => _filterStatus = 2); _performSearch(provider); },
                       ),
+                      const SizedBox(width: 8),
+                      // Date filter
+                      ActionChip(
+                        avatar: Icon(Icons.calendar_month, size: 16, color: _filterDate != null ? Colors.white : null),
+                        label: Text(
+                          _filterDate != null ? DateFormat('MMM d').format(_filterDate!) : 'Any Date',
+                          style: TextStyle(fontSize: 11, color: _filterDate != null ? Colors.white : null),
+                        ),
+                        onPressed: () async {
+                          final d = await showDatePicker(
+                            context: context,
+                            initialDate: _filterDate ?? DateTime.now(),
+                            firstDate: DateTime(2024),
+                            lastDate: DateTime(2030),
+                          );
+                          if (d != null) {
+                            setState(() => _filterDate = d);
+                            _performSearch(provider);
+                          }
+                        },
+                        backgroundColor: _filterDate != null ? colorScheme.primary : null,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      if (_filterDate != null) ...[
+                        const SizedBox(width: 4),
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 16),
+                          onPressed: () {
+                            setState(() => _filterDate = null);
+                            _performSearch(provider);
+                          },
+                        ),
+                      ],
                     ],
                   ),
                 ),

@@ -188,6 +188,14 @@ class StudySchedulingScreen extends StatelessWidget {
                 }
                 final dur = int.tryParse(durationCtrl.text.trim()) ?? 30;
                 final dateTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute);
+                
+                if (dateTime.isBefore(DateTime.now())) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Cannot schedule sessions in the past!')),
+                  );
+                  return;
+                }
+
                 context.read<ScheduleProvider>().addSession(
                   subjectId: selectedSubject!.id,
                   topicId: selectedTopic!.id,

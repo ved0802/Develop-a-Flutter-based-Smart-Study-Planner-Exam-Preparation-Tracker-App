@@ -131,8 +131,11 @@ class _SubjectCardState extends State<_SubjectCard> {
                       ),
                       PopupMenuButton<String>(
                         onSelected: (v) {
-                          if (v == 'edit') _showEditSubjectDialog(context, widget.subject);
-                          else if (v == 'delete') _confirmDelete(context, widget.subject);
+                          if (v == 'edit') {
+                            _showEditSubjectDialog(context, widget.subject);
+                          } else if (v == 'delete') {
+                            _confirmDelete(context, widget.subject);
+                          }
                         },
                         itemBuilder: (_) => [
                           const PopupMenuItem(value: 'edit', child: Text('Edit')),
@@ -237,7 +240,14 @@ class _TopicTile extends StatelessWidget {
       title: Text(topic.name, style: TextStyle(decoration: topic.isCompleted ? TextDecoration.lineThrough : null, color: topic.isCompleted ? colorScheme.onSurfaceVariant : null)),
       subtitle: Text('${topic.estimatedMinutes} min • ${topic.statusLabel}', style: TextStyle(color: AppTheme.statusColor(topic.status), fontSize: 12)),
       trailing: PopupMenuButton<String>(
-        onSelected: (v) { if (v == 'edit') _showEditTopicDialog(context, topic); else if (v == 'delete') { context.read<ScheduleProvider>().deleteByTopic(topic.id); context.read<SubjectProvider>().deleteTopic(topic.id); } },
+        onSelected: (v) {
+          if (v == 'edit') {
+            _showEditTopicDialog(context, topic);
+          } else if (v == 'delete') {
+            context.read<ScheduleProvider>().deleteByTopic(topic.id);
+            context.read<SubjectProvider>().deleteTopic(topic.id);
+          }
+        },
         itemBuilder: (_) => [const PopupMenuItem(value: 'edit', child: Text('Edit')), const PopupMenuItem(value: 'delete', child: Text('Delete'))],
       ),
     );
